@@ -6,7 +6,7 @@ environment-defaults:
     branch: null
     repository: null
 global:
-  application_name: myapp
+  application_name: myapp-unique1234
   default_ec2_keyname: null
   default_platform: Docker running on 64bit Amazon Linux 2023
   default_region: us-east-1
