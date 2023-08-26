@@ -22,8 +22,8 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t olagunju/jennifer:latest .
-          docker push olagunju/jennifer:latest
+          docker build -t chimerichards/aws-demo:latest .
+          docker push chimerichards/aws-demo:latest
 
     
       - name: Deploy to Elastic Beanstalk
