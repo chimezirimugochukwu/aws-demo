@@ -3,7 +3,7 @@ const app = express();
 const PORT = 8080;
 
 app.get("/", (req, res) => {
-  res.send("Hello from Express API!. This is aws-demo APP. YEYEYE, it works on azure well!!!" );
+  res.send("Hello from Express API!. This is aws-demo APP. YEYEYE, it works on azure wellss!!!" );
 });
 
 app.listen(PORT, () => {
