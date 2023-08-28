@@ -1,7 +1,7 @@
 {
   "AWSEBDockerrunVersion": "1",
   "Image": {
-    "Name": "chimerichards/aws-demo",
+    "Name": "olagunjuraman/jennifer-app",
     "Update": "true"
   },
   "Ports": [
