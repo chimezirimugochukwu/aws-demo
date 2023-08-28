@@ -56,6 +56,15 @@ jobs:
           echo "  profile: null" >> .elasticbeanstalk/config.yml
           echo "  sc: git" >> .elasticbeanstalk/config.yml
           echo "  workspace_type: Application" >> .elasticbeanstalk/config.yml
+
+      - name: Initialize Git repository
+        run: |
+          git init
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
+          git add .
+          git commit -m "Initial commit for EB deployment"
+
       
       - name: Generate Dockerrun.aws.json
         run: |
