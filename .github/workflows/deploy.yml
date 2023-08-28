@@ -37,14 +37,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Initialize Git repository
-        run: |
-          git init
-          git config user.email "action@github.com"
-          git config user.name "GitHub Action"
-          git add .
-          git commit -m "Initial commit for EB deployment"
-
       - name: Deploy to Elastic Beanstalk in ${{ matrix.region }}
         run: |
           pip install awsebcli
