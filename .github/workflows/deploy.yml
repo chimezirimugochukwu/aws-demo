@@ -59,11 +59,12 @@ jobs:
 
       - name: Deploy to Elastic Beanstalk in ${{ matrix.region }}
         run: |
-            pip install awsebcli
-            mkdir -p ~/.aws
-            echo "[profile ${{ matrix.region }}]" >> ~/.aws/credentials
-            echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY }}" >> ~/.aws/credentials
-            echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_KEY }}" >> ~/.aws/credentials
-            echo "[profile ${{ matrix.region }}]" >> ~/.aws/config
-            echo "region = ${{ matrix.region }}" >> ~/.aws/config
-            eb deploy myenv-${{ matrix.region }} --profile ${{ matrix.region }}
+                pip install awsebcli
+                mkdir -p ~/.aws
+                echo "[default]" >> ~/.aws/credentials
+                echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY }}" >> ~/.aws/credentials
+                echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_KEY }}" >> ~/.aws/credentials
+                echo "[default]" >> ~/.aws/config
+                echo "region = ${{ matrix.region }}" >> ~/.aws/config
+                eb deploy myenv-${{ matrix.region }}
+    
