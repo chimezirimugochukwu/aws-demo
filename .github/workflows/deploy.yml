@@ -56,15 +56,30 @@ jobs:
           echo "  profile: null" >> .elasticbeanstalk/config.yml
           echo "  sc: git" >> .elasticbeanstalk/config.yml
           echo "  workspace_type: Application" >> .elasticbeanstalk/config.yml
+      
+      - name: Generate Dockerrun.aws.json
+        run: |
+          echo '{
+            "AWSEBDockerrunVersion": "1",
+            "Image": {
+              "Name": "chimerichards/aws-demo:latest",
+              "Update": "true"
+            },
+            "Ports": [
+              {
+                "ContainerPort": "80"
+              }
+            ]
+          }' > Dockerrun.aws.json
 
       - name: Deploy to Elastic Beanstalk in ${{ matrix.region }}
         run: |
-                pip install awsebcli
-                mkdir -p ~/.aws
-                echo "[default]" >> ~/.aws/credentials
-                echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY }}" >> ~/.aws/credentials
-                echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_KEY }}" >> ~/.aws/credentials
-                echo "[default]" >> ~/.aws/config
-                echo "region = ${{ matrix.region }}" >> ~/.aws/config
-                eb deploy myenv-${{ matrix.region }}
-    
+          pip install awsebcli
+          mkdir -p ~/.aws
+          echo "[default]" >> ~/.aws/credentials
+          echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY }}" >> ~/.aws/credentials
+          echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_KEY }}" >> ~/.aws/credentials
+          echo "[default]" >> ~/.aws/config
+          echo "region = ${{ matrix.region }}" >> ~/.aws/config
+          eb deploy myenv-${{ matrix.region }}
+
