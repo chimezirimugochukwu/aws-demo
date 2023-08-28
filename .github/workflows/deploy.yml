@@ -8,7 +8,7 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    environment: DEV # <-- Specify the environment here
+    environment: DEV
 
     steps:
       - name: Checkout code
@@ -25,15 +25,25 @@ jobs:
           docker build -t chimerichards/aws-demo:latest .
           docker push chimerichards/aws-demo:latest
 
-    
-      - name: Deploy to Elastic Beanstalk
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        region: ["us-east-1", "eu-west-1"]
+
+    steps:
+      - name: Adjust .elasticbeanstalk configuration for region
         run: |
-            pip install awsebcli
-            mkdir -p ~/.aws  # <-- Ensure the directory exists
-            echo "[default]" >> ~/.aws/credentials  # <-- Add a default profile
-            echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY }}" >> ~/.aws/credentials
-            echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_KEY }}" >> ~/.aws/credentials
-            echo "[default]" >> ~/.aws/config  # <-- Add a default profile
-            echo "region = us-east-1" >> ~/.aws/config
-            eb deploy
-        
+          sed -i "s/application_name: myapp/application_name: myapp-unique1234-${{ matrix.region }}/g" .elasticbeanstalk/config.yml
+
+      - name: Deploy to Elastic Beanstalk in ${{ matrix.region }}
+        run: |
+          pip install awsebcli
+          mkdir -p ~/.aws
+          echo "[profile ${{ matrix.region }}]" >> ~/.aws/credentials
+          echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY }}" >> ~/.aws/credentials
+          echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_KEY }}" >> ~/.aws/credentials
+          echo "[profile ${{ matrix.region }}]" >> ~/.aws/config
+          echo "region = ${{ matrix.region }}" >> ~/.aws/config
+          eb deploy myenv-${{ matrix.region }} --profile ${{ matrix.region }}
