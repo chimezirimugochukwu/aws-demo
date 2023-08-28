@@ -35,7 +35,8 @@ jobs:
     steps:
       - name: Adjust .elasticbeanstalk configuration for region
         run: |
-          sed -i "s/application_name: myapp/application_name: myapp-unique1234-${{ matrix.region }}/g" .elasticbeanstalk/config.yml
+          sed -i "s/application_name: myapp/application_name: myapp-unique1234-${{ matrix.region }}/g" $GITHUB_WORKSPACE/.elasticbeanstalk/config.yml
+          sed -i "s/default_region: us-east-1/default_region: ${{ matrix.region }}/g" $GITHUB_WORKSPACE/.elasticbeanstalk/config.yml
 
       - name: Deploy to Elastic Beanstalk in ${{ matrix.region }}
         run: |
