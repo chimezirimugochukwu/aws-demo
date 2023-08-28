@@ -34,28 +34,8 @@ jobs:
         region: ["us-east-1", "eu-west-1"]
 
     steps:
-      - name: Generate .elasticbeanstalk configuration for region
-        run: |
-          mkdir -p .elasticbeanstalk
-          echo "branch-defaults:" >> .elasticbeanstalk/config.yml
-          echo "  main:" >> .elasticbeanstalk/config.yml
-          echo "    environment: myenv-${{ matrix.region }}" >> .elasticbeanstalk/config.yml
-          echo "environment-defaults:" >> .elasticbeanstalk/config.yml
-          echo "  myenv:" >> .elasticbeanstalk/config.yml
-          echo "    branch: null" >> .elasticbeanstalk/config.yml
-          echo "    repository: null" >> .elasticbeanstalk/config.yml
-          echo "global:" >> .elasticbeanstalk/config.yml
-          echo "  application_name: myapp-unique1234-${{ matrix.region }}" >> .elasticbeanstalk/config.yml
-          echo "  default_ec2_keyname: null" >> .elasticbeanstalk/config.yml
-          echo "  default_platform: Docker running on 64bit Amazon Linux 2023" >> .elasticbeanstalk/config.yml
-          echo "  default_region: ${{ matrix.region }}" >> .elasticbeanstalk/config.yml
-          echo "  include_git_submodules: true" >> .elasticbeanstalk/config.yml
-          echo "  instance_profile: null" >> .elasticbeanstalk/config.yml
-          echo "  platform_name: null" >> .elasticbeanstalk/config.yml
-          echo "  platform_version: null" >> .elasticbeanstalk/config.yml
-          echo "  profile: null" >> .elasticbeanstalk/config.yml
-          echo "  sc: git" >> .elasticbeanstalk/config.yml
-          echo "  workspace_type: Application" >> .elasticbeanstalk/config.yml
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Initialize Git repository
         run: |
@@ -64,22 +44,6 @@ jobs:
           git config user.name "GitHub Action"
           git add .
           git commit -m "Initial commit for EB deployment"
-
-      
-      - name: Generate Dockerrun.aws.json
-        run: |
-          echo '{
-            "AWSEBDockerrunVersion": "1",
-            "Image": {
-              "Name": "chimerichards/aws-demo:latest",
-              "Update": "true"
-            },
-            "Ports": [
-              {
-                "ContainerPort": "80"
-              }
-            ]
-          }' > Dockerrun.aws.json
 
       - name: Deploy to Elastic Beanstalk in ${{ matrix.region }}
         run: |
